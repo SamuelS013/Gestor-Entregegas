@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Fiado - Panificadora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Carga de html2canvas desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <!-- Header / Saludo al Dueño -->
+    <header class="user-header">
+        <div class="welcome-card">
+            <h2 id="saludo-usuario">Buen día, Rafael</h2>
+            <p id="fecha">Hoy es: </p>
+            <p id="valor-dolar">Valor del Dólar para hoy: </p>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+
+        <!-- Tarjetas de Balance -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <h3>Balance de Ventas</h3>
+                <div id="metric-balance-ventas" class="metric-value">$0.00</div>
+                <span class="badge positive">Cobrado con éxito</span>
+            </div>
+
+            <div class="metric-card">
+                <h3>Balance de Deudas</h3>
+                <div id="metric-dinero-deuda" class="metric-value debt-high">$0.00</div>
+                <span class="badge neutral">Por cobrar</span>
+            </div>
+        </section>
+
+        <!-- Botón para abrir el Modal de Crear Factura -->
+        <section class="actions-bar">
+            <button id="btn-abrir-modal" class="btn-primary">+ Crear Nueva Factura</button>
+        </section>
+
+        <!-- Historial de Facturas Emitidas / Pendientes -->
+        <section class="history-section">
+            <h3>Historial de Facturas Pendientes</h3>
+            <div id="lista-historial" class="history-list scrollable-container">
+                <p class="empty-msg">No hay facturas pendientes registradas.</p>
+            </div>
+        </section>
+
+        <!-- Historial de Facturas Pagadas -->
+        <section class="history-section history-paid-section">
+            <h3>Historial de Facturas Pagadas</h3>
+            <div id="lista-historial-pagadas" class="history-list scrollable-container">
+                <p class="empty-msg">No hay facturas pagadas aún.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Formulario de Nueva Factura -->
+    <div id="modal-factura" class="modal-overlay hidden">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Nueva Factura</h2>
+                <button id="btn-cerrar-modal" class="close-btn">&times;</button>
+            </div>
+
+            <form id="form-factura" class="modal-body">
+
+                <!-- Datos Automáticos del Sistema -->
+                <div class="system-meta-box">
+                    <p><strong>N° Factura:</strong> <span id="auto-factura-id">---</span></p>
+                    <p><strong>Fecha:</strong> <span id="auto-fecha">--/--/----</span></p>
+                    <p><strong>Hora:</strong> <span id="auto-hora">--:--</span></p>
+                </div>
+
+                <!-- Datos del Cliente -->
+                <div class="form-section">
+                    <h4>Datos del Cliente</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cliente-nombre">Nombre Completo *</label>
+                            <input type="text" id="cliente-nombre" required placeholder="Ej. Juan Pérez">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cliente-telefono">Teléfono *</label>
+                            <input type="tel" id="cliente-telefono" required placeholder="Ej. 0414-1234567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cliente-doc">Documento (CI/RIF)</label>
+                            <input type="text" id="cliente-doc" placeholder="Opcional (Ej. V-12345678)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cliente-ubicacion">Ubicación / Dirección</label>
+                            <input type="text" id="cliente-ubicacion" placeholder="Ej. Av. Principal #45">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla Dinámica de Productos -->
+                <div class="form-section">
+                    <h4>Detalle de Productos</h4>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">Cant.</th>
+                                <th style="width: 45%;">Descripción</th>
+                                <th style="width: 20%;">P. Unit ($)</th>
+                                <th style="width: 15%;">Total ($)</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-productos">
+                            <!-- Filas dinámicas generadas mediante JS -->
+                        </tbody>
+                    </table>
+
+                    <button type="button" id="btn-agregar-producto" class="btn-secondary">
+                        + Agregar Producto
+                    </button>
+                </div>
+
+                <!-- Resumen de Totales -->
+                <div class="totales-summary">
+                    <div class="total-row">
+                        <span>Total General:</span>
+                        <strong id="monto-total">$0.00</strong>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btn-cancelar" class="btn-cancel">Cancelar</button>
+                    <button type="submit" id="btn-guardar-factura" class="btn-primary">Guardar y Generar Factura</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Modal Vista Previa / Pagos / Descarga de Imagen de Factura -->
+    <div id="modal-preview" class="modal-overlay hidden">
+        <div class="modal-content modal-preview-content">
+            <div class="modal-header">
+                <h2 id="preview-titulo">Factura Generada</h2>
+                <button id="btn-cerrar-preview" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body preview-body">
+                <img id="preview-img" src="" alt="Vista previa de factura">
+            </div>
+            <div class="modal-footer">
+                <button id="btn-marcar-pagada" class="btn-success">Marcar como Pagada</button>
+                <a id="btn-descargar-img" class="btn-primary" download="Factura.png">Descargar Imagen</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
