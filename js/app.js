@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Actualizar Saludo Dinámico según la hora
+let nombre = "Rafael";
 function actualizarSaludoHorario() {
   const horaActual = new Date().getHours();
   let saludo = "Buen día";
-  let nombre = "Rafael";
   if (horaActual >= 12 && horaActual < 19) {
     saludo = "Buenas tardes";
   } else if (horaActual >= 19 || horaActual < 5) {
