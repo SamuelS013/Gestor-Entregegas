@@ -6,6 +6,7 @@
     --bg-light: #f4f6f9;
     --white: #ffffff;
     --gray-border: #e0e6ed;
+    --text: #050505;
     --text-muted: #6c757d;
     --green-success: #28a745;
     --green-hover: #218838;
@@ -25,16 +26,23 @@ body {
 
 /* Header & Saludo */
 .user-header {
+    width: 100%;
     max-width: 1000px;
     margin: 0 auto 25px auto;
+    display: flex;
+    justify-content: space-between;
 }
 
 .welcome-card {
     background-color: var(--white);
+    width: 100%;
     padding: 25px 30px;
     border-radius: var(--border-radius-lg);
     box-shadow: 0 4px 15px rgba(13, 27, 42, 0.05);
     border: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .welcome-card h2 {
@@ -45,8 +53,40 @@ body {
 
 .welcome-card p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--text);
 }
+
+.option-button {
+    width: 25%;
+    height: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
+
+.option-button button {
+    background-color: var(--primary);
+    justify-content: center;
+    width: auto;
+    height: 100%;
+    padding: 12px;
+    margin: 0;
+    border: none;
+    border-radius: 50px;
+}
+
+.option-button img {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+.option-button button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
 
 /* Dashboard Metrics */
 .dashboard-container {
@@ -67,6 +107,9 @@ body {
     border-radius: var(--border-radius-md);
     border: 1px solid var(--gray-border);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .metric-card h3 {
@@ -80,6 +123,19 @@ body {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 8px;
+}
+
+.metric-balance-img {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.metric-card img {
+    width: 100%;
+    height: 80%;
 }
 
 .debt-high {
@@ -587,4 +643,52 @@ body {
 .f-img-icon {
     width: 20px;
     height: 20px;
+}
+
+@media (max-width: 481px){
+    body {
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .welcome-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .option-button {
+        width: 15%;
+        height: 75;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: start;
+        align-items: end;
+        gap: 5px;
+    }
+
+    .option-button button {
+        width: 30px;
+        height: 30px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .option-button img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .form-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    }     
+
+    .form-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
