@@ -65,15 +65,38 @@ document.addEventListener('DOMContentLoaded', () => {
 function actualizarSaludoHorario() {
   const horaActual = new Date().getHours();
   let saludo = "Buen día";
+  let nombre = "Rafael";
   if (horaActual >= 12 && horaActual < 19) {
     saludo = "Buenas tardes";
   } else if (horaActual >= 19 || horaActual < 5) {
     saludo = "Buenas noches";
   }
   if (saludoUsuario) {
-    saludoUsuario.textContent = `${saludo}, Rafael`;
+    saludoUsuario.textContent = `${saludo}, ${nombre}`;
   }
 }
+
+//FUNCIONES PARA LA FECHA
+function mostrarFecha (){
+  const fecha = new Date();
+
+  const diasSemana = [
+    'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'
+  ];
+  const diaSemana = diasSemana[fecha.getDay()];
+
+  const diaNumero = fecha.getDate();
+
+  const meses = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const mesEscrito = meses[fecha.getMonth()];
+
+  document.getElementById("diaSemana").textContent = diaSemana;
+  document.getElementById("diaNumero").textContent = diaNumero;
+  document.getElementById("mes").textContent = mesEscrito;
+}
+document.addEventListener("DOMContentLoaded", mostrarFecha)
 
 // Manejo de Modal Formulario
 btnAbrirModal.addEventListener('click', () => {

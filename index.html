@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Fiado - Panificadora</title>
+    <title>Gestor de Fiado | Rafael</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="css/imagen/icono-pachos.png" type="imagen/png">
     <!-- Carga de html2canvas desde CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -13,10 +14,15 @@
     <!-- Header / Saludo al Dueño -->
     <header class="user-header">
         <div class="welcome-card">
-            <h2 id="saludo-usuario">Buen día, Rafael</h2>
-            <p id="fecha">Hoy es: </p>
-            <p id="valor-dolar">Valor del Dólar para hoy: </p>
-        </div>
+            <div>
+                <h2 id="saludo-usuario">Buen día, Rafael</h2>
+                <p id="fecha">Hoy es <span id="diaSemana">dia</span>, <span id="diaNumero">0</span> de <span id="mes">mes</span></p>
+                <p id="valor-dolar">Valor del Dólar para hoy: <span class="dolar">848.58 bs.</span></p>
+            </div>
+            <div class="option-button">
+                <button type="button" id="perfil"><img src="css/icono/person_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="perfil-icon"></button>
+                <button type="button" id="darkMode"><img src="css/icono/dark_mode_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="darkMode-icon"></button>
+            </div>
     </header>
 
     <main class="dashboard-container">
@@ -24,15 +30,25 @@
         <!-- Tarjetas de Balance -->
         <section class="metrics-grid">
             <div class="metric-card">
-                <h3>Balance de Ventas</h3>
-                <div id="metric-balance-ventas" class="metric-value">$0.00</div>
-                <span class="badge positive">Cobrado con éxito</span>
+                <div>
+                    <h3>Balance de Ventas</h3>
+                    <div id="metric-balance-ventas" class="metric-value">$0.00</div>
+                    <span class="badge positive">Cobrado con éxito</span>
+                </div>
+                <div class="metric-balance-img">
+                    <img src="css/imagen/BALANCE DE VENTAS.png" class="balance-ventas-img" alt="Balance Imagen">
+                </div>
             </div>
 
             <div class="metric-card">
-                <h3>Balance de Deudas</h3>
-                <div id="metric-dinero-deuda" class="metric-value debt-high">$0.00</div>
-                <span class="badge neutral">Por cobrar</span>
+                <div>
+                    <h3>Balance de Deudas</h3>
+                    <div id="metric-dinero-deuda" class="metric-value debt-high">$0.00</div>
+                    <span class="badge neutral">Por cobrar</span>
+                </div>
+                <div class="metric-balance-img">
+                    <img src="css/imagen/Deudas.png" class="balance-ventas-img" alt="Balance Imagen">
+                </div>
             </div>
         </section>
 
@@ -82,7 +98,7 @@
                     <h4>Datos del Cliente</h4>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="cliente-nombre">Nombre Completo *</label>
+                            <label for="cliente-nombre">Nombre *</label>
                             <input type="text" id="cliente-nombre" required placeholder="Ej. Juan Pérez">
                         </div>
 
@@ -97,7 +113,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="cliente-ubicacion">Ubicación / Dirección</label>
+                            <label for="cliente-ubicacion">Ubicación</label>
                             <input type="text" id="cliente-ubicacion" placeholder="Ej. Av. Principal #45">
                         </div>
                     </div>
@@ -136,7 +152,7 @@
 
                 <div class="modal-footer">
                     <button type="button" id="btn-cancelar" class="btn-cancel">Cancelar</button>
-                    <button type="submit" id="btn-guardar-factura" class="btn-primary">Guardar y Generar Factura</button>
+                    <button type="submit" id="btn-guardar-factura" class="btn-primary">Generar Factura</button>
                 </div>
 
             </form>
