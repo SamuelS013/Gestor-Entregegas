@@ -1,0 +1,174 @@
+/* Variables de Color y Estilos Base */
+:root {
+    --primary: #EF6326;           /* Naranja Fuerte corporativo */
+    --primary-hover: #d85219;
+    --dark-blue: #0d1b2a;         /* Azul muy oscuro */
+    --bg-light: #f4f6f9;
+    --white: #ffffff;
+    --gray-border: #e0e6ed;
+    --text: #050505;
+    --text-muted: #6c757d;
+    --green-success: #28a745;
+    --green-hover: #218838;
+    --red-alert: #dc3545;
+    --border-radius-lg: 20px;
+    --border-radius-md: 12px;
+    --border-radius-sm: 8px;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--dark-blue);
+    margin: 0;
+    padding: 20px;
+}
+
+.perfil-card {
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    box-shadow: 0 0 15px #00000050;
+}
+
+.perfil-header {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    height: auto;
+    border-radius: 0 0 60px 60px;
+}
+
+.perfil-header-container {
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.header {
+    font-size: 16px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.home-img {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.header h1 {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+}
+
+.perfil-header-info {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.logo {
+    background-color: var(--primary);
+    width: 25%;
+    height: auto;
+    padding: 20px;
+    margin: 30px;
+    margin-left: 0;
+    border: 2px solid var(--primary-hover);
+    border-radius: 100px;
+    box-shadow: 0 0 15px #00000050;
+    display: flex;
+    flex-direction: column;
+}
+
+.info {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.info .nombre {
+    font-size: 2rem;
+    letter-spacing: 1.1px;
+}
+
+.icon-editar-perfil {
+    background: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+    border: 0;
+    display: flex;
+    justify-content: top;
+    align-items: top;
+}
+
+.perfil-main {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+.perfil-ventas {
+    background-color: white;
+    width: 40%;
+    padding: 20px;
+    border: 2px solid var(--primary);
+    border-radius: var(--border-radius-md);
+}
+
+@media (max-width: 481px) {
+
+    body {
+        font-size: 10px;
+    }
+
+    .perfil-header-info {
+        background-color: none;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .perfil-header-info img {
+        margin: 0;
+        margin-top: 20px;
+    }
+
+    .info {
+        position: relative;
+        height: 50px;
+        margin: 0;
+        display: flex;
+    }
+
+    .icon-editar-perfil {
+        position: absolute;
+    }
+
+    .perfil-main {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .perfil-main div {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+}
