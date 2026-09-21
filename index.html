@@ -6,6 +6,7 @@
     <title>Gestor de Fiado | Rafael</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="css/imagen/icono-pachos.png" type="imagen/png">
+    <link rel="manifest" href="/manifest.json">
     <!-- Carga de html2canvas desde CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -15,12 +16,14 @@
     <header class="user-header">
         <div class="welcome-card">
             <div>
-                <h2 id="saludo-usuario">Buen día, Rafael</h2>
+                <h2 id="saludo-usuario">Buen día, <span id="nombreUser">Rafael</span></h2>
                 <p id="fecha">Hoy es <span id="diaSemana">dia</span>, <span id="diaNumero">0</span> de <span id="mes">mes</span></p>
                 <p id="valor-dolar">Valor del Dólar para hoy: <span class="dolar">848.58 bs.</span></p>
             </div>
             <div class="option-button">
-                <button type="button" id="perfil"><img src="css/icono/person_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="perfil-icon"></button>
+                <button type="button" id="perfil">
+                     <a href="perfil-template.html"><img src="css/icono/person_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="perfil-icon"></a>
+                </button>
                 <button type="button" id="darkMode"><img src="css/icono/dark_mode_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="darkMode-icon"></button>
             </div>
     </header>
@@ -103,8 +106,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="cliente-telefono">Teléfono *</label>
-                            <input type="tel" id="cliente-telefono" required placeholder="Ej. 0414-1234567">
+                            <label for="cliente-telefono">Teléfono</label>
+                            <input type="tel" id="cliente-telefono" placeholder="Ej. 0414-1234567">
                         </div>
 
                         <div class="form-group">
@@ -113,8 +116,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="cliente-ubicacion">Ubicación</label>
-                            <input type="text" id="cliente-ubicacion" placeholder="Ej. Av. Principal #45">
+                            <label for="cliente-ubicacion">Ubicación *</label>
+                            <input type="text" id="cliente-ubicacion" required placeholder="Ej. Av. Principal #45">
                         </div>
                     </div>
                 </div>
