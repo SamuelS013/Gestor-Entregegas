@@ -37,14 +37,14 @@ function mostrarFecha() {
   const fecha = new Date();
 
   const diasSemana = [
-    'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'
+    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
   ];
   const diaSemana = diasSemana[fecha.getDay()];
   const diaNumero = fecha.getDate();
 
   const meses = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    'ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN',
+    'JUL', 'AGO', 'SEPT', 'OCT', 'NOV', 'DIC'
   ];
   const mesEscrito = meses[fecha.getMonth()];
 
@@ -71,7 +71,7 @@ async function actualizarDolar() {
     
   } catch (error) {
     console.error('Error al obtener el dólar:', error);
-    document.getElementById('dolar').textContent = 'Error';
+    document.getElementById('dolar').textContent = '000.00 bs.';
   }
 }
 
