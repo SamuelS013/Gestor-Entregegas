@@ -115,7 +115,7 @@ function prepararDatosAutomaticos() {
   const hora = ahora.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
     
   const fechaVencimiento = new Date(ahora);
-  fechaVencimiento.setDate(ahora.getDate() + 8);
+  fechaVencimiento.setDate(ahora.getDate() + 7);
 
   // Formatear a YYYY-MM-DD para el input tipo date
   const año = fechaVencimiento.getFullYear();
