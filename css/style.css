@@ -691,4 +691,10 @@ body {
         flex-direction: column;
         gap: 10px;
     }
+
+    .system-meta-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
 }
