@@ -18,7 +18,7 @@
             <div>
                 <h2 id="saludo-usuario">Buen día, <span id="nombreUser">Rafael</span></h2>
                 <p id="fecha">Hoy es <span id="diaSemana">dia</span>, <span id="diaNumero">0</span> de <span id="mes">mes</span></p>
-                <p id="valor-dolar">Valor del Dólar para hoy: <span class="dolar">848.58 bs.</span></p>
+                <p id="valor-dolar">Valor del Dólar para hoy: <span id="dolar" class="dolar">848.58 bs.</span></p>
             </div>
             <div class="option-button">
                 <button type="button" id="perfil">
@@ -94,6 +94,10 @@
                     <p><strong>N° Factura:</strong> <span id="auto-factura-id">---</span></p>
                     <p><strong>Fecha:</strong> <span id="auto-fecha">--/--/----</span></p>
                     <p><strong>Hora:</strong> <span id="auto-hora">--:--</span></p>
+                    <div class="form-group">
+                        <label for="fecha-vencimiento">Vence</label>
+                        <input type="date" id="fecha-vencimiento" required>
+                    </div>
                 </div>
 
                 <!-- Datos del Cliente -->
