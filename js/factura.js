@@ -403,17 +403,17 @@ async function cargarHistorialFacturas() {
     const q = query(collection(db, 'facturas'), orderBy('creadoEn', 'desc'));
     const querySnapshot = await getDocs(q);
 
-    listaHistorialPendientes.innerHTML = '';
-    listaHistorialFacturasPagadas.innerHTML = '';
-    listaHistorialPagadas.innerHTML = '';
+    establecerContenidoLista(listaHistorialPendientes, '');
+    establecerContenidoLista(listaHistorialFacturasPagadas, '');
+    establecerContenidoLista(listaHistorialPagadas, '');
 
     let contadorPagadas = 0;
     let contadorPendientes = 0;
 
     if (querySnapshot.empty) {
-      listaHistorialPendientes.innerHTML = '<p class="empty-msg">No hay facturas pendientes.</p>';
-      listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
-      listaHistorialPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
+      establecerContenidoLista(listaHistorialPendientes, '<p class="empty-msg">No hay facturas pendientes.</p>');
+      establecerContenidoLista(listaHistorialFacturasPagadas, '<p class="empty-msg">No hay facturas pagadas aún.</p>');
+      establecerContenidoLista(listaHistorialPagadas, '<p class="empty-msg">No hay facturas pagadas aún.</p>');
       return;
     }
 
@@ -426,30 +426,32 @@ async function cargarHistorialFacturas() {
       const vencida = !data.pagada && facturaVencida(data.fechaVencimiento);
       if (data.pagada) {
         contadorPagadas++;
-        listaHistorialFacturasPagadas.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
-        listaHistorialPagadas.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
+        listaHistorialFacturasPagadas?.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
+        listaHistorialPagadas?.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
       } else {
         contadorPendientes++;
-        listaHistorialPendientes.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
+        listaHistorialPendientes?.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
       }
     });
 
     if (contadorPendientes === 0) {
-      listaHistorialPendientes.innerHTML = '<p class="empty-msg">No hay facturas pendientes.</p>';
+      establecerContenidoLista(listaHistorialPendientes, '<p class="empty-msg">No hay facturas pendientes.</p>');
     }
     if (contadorPagadas === 0) {
-      listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
-    }
-    if (contadorPagadas === 0) {
-      listaHistorialPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
+      establecerContenidoLista(listaHistorialFacturasPagadas, '<p class="empty-msg">No hay facturas pagadas aún.</p>');
+      establecerContenidoLista(listaHistorialPagadas, '<p class="empty-msg">No hay facturas pagadas aún.</p>');
     }
 
   } catch (error) {
     console.error('Error al cargar historial:', error);
-    listaHistorialPendientes.innerHTML = '<p class="empty-msg">No se pudieron cargar las facturas pendientes. Intenta recargar la página.</p>';
-    listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No se pudieron cargar las facturas pagadas. Intenta recargar la página.</p>';
-    listaHistorialPagadas.innerHTML = '<p class="empty-msg">No se pudieron cargar los pagos. Intenta recargar la página.</p>';
+    establecerContenidoLista(listaHistorialPendientes, '<p class="empty-msg">No se pudieron cargar las facturas pendientes. Intenta recargar la página.</p>');
+    establecerContenidoLista(listaHistorialFacturasPagadas, '<p class="empty-msg">No se pudieron cargar las facturas pagadas. Intenta recargar la página.</p>');
+    establecerContenidoLista(listaHistorialPagadas, '<p class="empty-msg">No se pudieron cargar los pagos. Intenta recargar la página.</p>');
   }
+}
+
+function establecerContenidoLista(lista, contenido) {
+  if (lista) lista.innerHTML = contenido;
 }
 
 function crearTarjetaFactura(factura, monto, vencida) {
