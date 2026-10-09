@@ -13,7 +13,7 @@ import { initMetrics } from './metrics.js';
 import {
   collection,
   addDoc,
-  getDocs,
+  getDocsFromServer,
   doc,
   updateDoc,
   query,
@@ -57,18 +57,39 @@ let facturaActualSeleccionada = null;
 // API pública del módulo
 // ------------------------------------------------------------
 export async function initFacturas() {
-  // 1. Asegurar sesión anónima ANTES de tocar Firestore
   try {
     await iniciarSesionAnonima();
-  } catch (error) {
-    console.error('No se pudo iniciar sesión anónima:', error);
-    alert('No se pudo conectar de forma segura. Recarga la página.');
-    return;
-  }
 
-  // 2. Registrar eventos y cargar datos
-  registrarEventos();
-  await Promise.all([cargarHistorialFacturas(), initMetrics()]);
+    registrarEventos();
+    await Promise.all([cargarHistorialFacturas(), initMetrics()]);
+  } catch (error) {
+    console.error('No se pudieron inicializar los datos de Firebase:', error);
+    mostrarErrorCargaDatos(
+      'No se pudieron cargar los datos desde Firebase. Verifica la conexión a Internet e inténtalo de nuevo.'
+    );
+  }
+}
+
+function mostrarErrorCargaDatos(mensaje) {
+  [
+    listaHistorialPendientes,
+    listaHistorialFacturasPagadas,
+    listaHistorialPagadas
+  ].forEach(lista => establecerContenidoLista(
+    lista,
+    `<p class="empty-msg">${mensaje}</p>`
+  ));
+
+  ['metric-ventas-semana', 'metric-ventas-mes', 'metric-deudas'].forEach(id => {
+    document.getElementById(id).textContent = '—';
+  });
+  ['trend-ventas-semana', 'trend-ventas-mes', 'trend-deudas'].forEach(id => {
+    document.getElementById(id).textContent = 'No se pudieron cargar los datos';
+  });
+
+  const errorMetricas = document.getElementById('metrics-error');
+  errorMetricas.textContent = mensaje;
+  errorMetricas.classList.remove('hidden');
 }
 
 // ------------------------------------------------------------
@@ -401,7 +422,7 @@ function estamparMarcaPagado(base64Src) {
 async function cargarHistorialFacturas() {
   try {
     const q = query(collection(db, 'facturas'), orderBy('creadoEn', 'desc'));
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocsFromServer(q);
 
     establecerContenidoLista(listaHistorialPendientes, '');
     establecerContenidoLista(listaHistorialFacturasPagadas, '');

@@ -1,7 +1,11 @@
 // firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { initializeFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInAnonymously
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCsHE-Ee3wLKWRz_Lz4nEXAiuF50JZFkno",
@@ -15,21 +19,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = initializeFirestore(app, {
-  experimentalAutoDetectLongPolling: true
+  experimentalForceLongPolling: true
 });
 
 const auth = getAuth(app);
 
-export const iniciarSesionAnonima = () => {
-  return new Promise((resolve, reject) => {
-    signInAnonymously(auth)
-      .then(() => {
-        console.log("Sesión anónima iniciada correctamente.");
-        resolve();
-      })
-      .catch((error) => {
-        console.error("Error al iniciar sesión anónima:", error);
+export const iniciarSesionAnonima = async () => {
+  const usuarioActual = await new Promise((resolve, reject) => {
+    let unsubscribe = () => {};
+    unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      (error) => {
+        unsubscribe();
         reject(error);
-      });
+      }
+    );
   });
+
+  if (usuarioActual) return;
+
+  await signInAnonymously(auth);
+  console.log("Sesión anónima iniciada correctamente.");
 };

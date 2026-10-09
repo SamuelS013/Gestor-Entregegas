@@ -1,7 +1,7 @@
 import { db } from './firebase.js';
 import {
   collection,
-  getDocs,
+  getDocsFromServer,
   query,
   Timestamp,
   where
@@ -238,11 +238,11 @@ export async function initMetrics() {
 
   try {
     const [thisWeek, previousWeek, thisMonth, previousMonth, debtInvoices] = await Promise.all([
-      getDocs(paymentDateRange(thisWeekStart, tomorrow)),
-      getDocs(paymentDateRange(previousWeekStart, previousWeekEnd)),
-      getDocs(paymentDateRange(thisMonthStart, tomorrow)),
-      getDocs(paymentDateRange(previousMonthStart, previousMonthCompareEnd)),
-      getDocs(query(facturas, where('montoTotal', '>', 0)))
+      getDocsFromServer(paymentDateRange(thisWeekStart, tomorrow)),
+      getDocsFromServer(paymentDateRange(previousWeekStart, previousWeekEnd)),
+      getDocsFromServer(paymentDateRange(thisMonthStart, tomorrow)),
+      getDocsFromServer(paymentDateRange(previousMonthStart, previousMonthCompareEnd)),
+      getDocsFromServer(query(facturas, where('montoTotal', '>', 0)))
     ]);
 
     const weekPayments = invoicesFrom(thisWeek).filter(invoice => invoice.pagada);
