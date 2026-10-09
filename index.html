@@ -6,80 +6,90 @@
     <title>Gestor de Fiado | Rafael</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="css/imagen/icono-pachos.png" type="imagen/png">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <!-- Carga de html2canvas desde CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <!-- Header / Saludo al Dueño -->
-    <header class="user-header">
-        <div class="welcome-card">
-            <div>
-                <h2 id="saludo-usuario">Buen día, <span id="nombreUser">Rafael</span></h2>
-            </div>
-            <div class="date-container">
-                <div class="fecha-container" id="fecha">
-                    <p id="diaSemana">Domingo</p>
-                    <p id="diaNumero">23</p>
-                    <p id="mes">Septiembre</p>
-                </div>
-                <div id="valor-dolar" class="dolar-container">
-                    <p>Valor Dólar<br>(USD/Bs)</p>
-                    <p id="dolar">900.00 bs.</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <main class="dashboard-container">
-
-        <!-- Tarjetas de Balance -->
-        <section class="metrics-grid">
-            <div class="metric-card">
-                <div>
-                    <h3>Balance de Ventas</h3>
-                    <div id="metric-balance-ventas" class="metric-value">$0.00</div>
-                    <span class="badge positive">Cobrado con éxito</span>
+        <section id="view-home" class="app-view">
+            <header class="user-header">
+                <div class="welcome-card">
+                    <h2 id="saludo-usuario">Buen día, <span id="nombreUser">Rafael</span></h2>
+                    <div class="date-container">
+                        <div class="fecha-container" id="fecha">
+                            <p id="diaSemana">Domingo</p>
+                            <p id="diaNumero">23</p>
+                            <p id="mes">Septiembre</p>
+                        </div>
+                        <div id="valor-dolar" class="dolar-container">
+                            <p>Valor del dólar<br>(USD/Bs)</p>
+                            <p id="dolar">Cargando...</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-balance-img">
-                    <img src="css/imagen/BALANCE DE VENTAS.png" class="balance-ventas-img" alt="Balance Imagen">
-                </div>
+            </header>
+            <div class="section-heading">
+                <div><h2>Métricas</h2><p>Rendimiento de ventas y cuentas por cobrar</p></div>
             </div>
-
-            <div class="metric-card">
-                <div>
-                    <h3>Balance de Deudas</h3>
-                    <div id="metric-dinero-deuda" class="metric-value debt-high">$0.00</div>
-                    <span class="badge neutral">Por cobrar</span>
-                </div>
-                <div class="metric-balance-img">
-                    <img src="css/imagen/Deudas.png" class="balance-ventas-img" alt="Balance Imagen">
-                </div>
-            </div>
+            <section class="metrics-grid">
+                <article class="metric-card trend-card" data-metric="week" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Ver detalle de ventas de la semana">
+                    <div class="metric-copy">
+                        <h3>Ventas de la semana</h3>
+                        <div id="metric-ventas-semana" class="metric-value">$0.00</div>
+                        <span id="trend-ventas-semana" class="badge neutral">Calculando comparación...</span>
+                    </div>
+                    <div id="chart-ventas-semana" class="metric-chart" aria-label="Gráfica de ventas de la semana"></div>
+                </article>
+                <article class="metric-card trend-card" data-metric="month" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Ver detalle de ventas del mes">
+                    <div class="metric-copy">
+                        <h3>Ventas del mes</h3>
+                        <div id="metric-ventas-mes" class="metric-value">$0.00</div>
+                        <span id="trend-ventas-mes" class="badge neutral">Calculando comparación...</span>
+                    </div>
+                    <div id="chart-ventas-mes" class="metric-chart" aria-label="Gráfica de ventas del mes"></div>
+                </article>
+                <article class="metric-card trend-card" data-metric="debts" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Ver detalle de deudas pendientes">
+                    <div class="metric-copy">
+                        <h3>Deudas pendientes</h3>
+                        <div id="metric-deudas" class="metric-value debt-high">$0.00</div>
+                        <span id="trend-deudas" class="badge neutral">0% de las ventas registradas</span>
+                    </div>
+                    <div id="chart-deudas" class="metric-chart" aria-label="Gráfica de deudas pendientes"></div>
+                </article>
+            </section>
+            <p id="metrics-error" class="metrics-error hidden" role="status"></p>
         </section>
 
-        <!-- Botón para abrir el Modal de Crear Factura -->
-        <section class="actions-bar">
-            <button id="btn-abrir-modal" class="btn-primary">+ Crear Nueva Factura</button>
+        <!-- SECCION DE FACTURAS -->
+        <section id="view-facturas" class="app-view hidden">
+            <div class="section-heading">
+                <div><h2>Facturas</h2></div>
+            </div>
+            <section class="invoice-status-section" aria-labelledby="facturas-pendientes-titulo">
+                <h3 id="facturas-pendientes-titulo">Pendientes</h3>
+                <div id="lista-historial-pendientes" class="history-list invoice-grid">
+                    <p class="empty-msg">Cargando facturas pendientes...</p>
+                </div>
+            </section>
+            <section class="invoice-status-section" aria-labelledby="facturas-pagadas-titulo">
+                <h3 id="facturas-pagadas-titulo">Pagadas</h3>
+                <div id="lista-historial-facturas-pagadas" class="history-list invoice-grid">
+                    <p class="empty-msg">Cargando facturas pagadas...</p>
+                </div>
+            </section>
         </section>
 
-        <!-- Historial de Facturas Emitidas / Pendientes -->
-        <section class="history-section">
-            <h3>Historial de Facturas Pendientes</h3>
-            <div id="lista-historial" class="history-list scrollable-container">
-                <p class="empty-msg">No hay facturas pendientes registradas.</p>
+        <!-- SECCION DE PAGOS -->
+        <section id="view-pagos" class="app-view hidden">
+            <div class="section-heading">
+                <div><h2>Pagos</h2><p>Facturas cobradas recientemente</p></div>
+            </div>
+            <div id="lista-historial-pagadas" class="history-list invoice-grid">
+                <p class="empty-msg">Cargando pagos...</p>
             </div>
         </section>
-
-        <!-- Historial de Facturas Pagadas -->
-        <section class="history-section history-paid-section">
-            <h3>Historial de Facturas Pagadas</h3>
-            <div id="lista-historial-pagadas" class="history-list scrollable-container">
-                <p class="empty-msg">No hay facturas pagadas aún.</p>
-            </div>
-        </section>
-
     </main>
 
     <!-- Modal Formulario de Nueva Factura -->
@@ -188,6 +198,102 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js"></script>
+    <div id="modal-metric-detail" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="metric-detail-title">
+        <section class="modal-content metric-detail-content">
+            <header class="modal-header">
+                <h2 id="metric-detail-title"></h2>
+                <button id="btn-cerrar-detalle-metrica" class="close-btn" type="button" aria-label="Cerrar detalle">&times;</button>
+            </header>
+            <div class="metric-detail-summary">
+                <strong id="metric-detail-total"></strong>
+                <span id="metric-detail-period"></span>
+            </div>
+            <div id="metric-detail-chart" class="metric-detail-chart" aria-label="Gráfica del detalle de la métrica"></div>
+            <div class="metric-detail-table-wrapper">
+                <table class="metric-detail-table">
+                    <thead id="metric-detail-head"></thead>
+                    <tbody id="metric-detail-rows"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <nav class="nav-container" aria-label="Navegación principal">
+        <button id="btn-abrir-modal" class="nav-item nav-create" type="button" aria-label="Crear factura nueva">
+            <span class="nav-icon nav-plus" aria-hidden="true">+</span><span>Crear</span>
+        </button>
+        <button class="nav-item active" type="button" data-view="home" aria-current="page">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+            <span>Inicio</span>
+        </button>
+        <button class="nav-item" type="button" data-view="facturas">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm8 1v4h4M8 12h8M8 16h8"/></svg>
+            <span>Facturas</span>
+        </button>
+        <button class="nav-item" type="button" data-view="pagos">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18m-14 5h4"/></svg>
+            <span>Pagos</span>
+        </button>
+    </nav>
+
+    <script type="module" src="js/app.js">
+    </script>
 </body>
 </html>
+
+<!-- 
+    /* BOTTOM NAV PARA MÓVILES */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--primary-color);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    width: 25%;
+}
+
+.nav-item i { font-size: 1.2rem; }
+.nav-item.active { color: var(--card-bg); font-weight: bold; }
+
+/* UTILITIES */
+.hidden { display: none !important; }
+
+@media (max-width: 481px){
+
+    .pos-panel {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #form-venta-libre {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .creditos-layout .card button {
+        margin-bottom: 10px;
+    }
+}
+-->

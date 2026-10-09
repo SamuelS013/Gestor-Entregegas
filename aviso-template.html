@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h2 { width: 100%; text-align: center; margin-top: 0; color: black; }
+
+    .aviso-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .aviso-item {
+        justify-content: left;
+        text-align: left;
+        margin-bottom: 40px;
+    }
+
+    li h3 {
+        color: black;
+        width: 75%;
+        border-bottom: 1px solid  #EF6326;
+        padding: 5px 5px;
+    }
+
+    li img {
+        width: 100%;
+        height: auto;
+    }
+    
+    li p { color: #555; line-height: 1.5;}
+
+    .pendientes-img {
+        width: 75%;
+        height: auto;
+    }
+
+    button {
+      background: #EF6326;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+    <h2>Actualización</h2>
+    <ul class="aviso-list">
+        <li class="aviso-item">
+            <h3>Barra de navegación</h3>
+            <img src="css/imagen/navbar-aviso.png">
+            <p>Se ha añadido una barra de navegación inferior para ir entre secciones</p>
+        </li>
+        <li class="aviso-item">
+            <h3>Métricas</h3>
+            <img src="css/imagen/metrics-aviso.png">
+            <p>Ahora en la pantalla principal se mostrarán métricas reales sobre el desempeño con una pequeña gráfica.</p>
+        </li>
+        <li class="aviso-item">
+            <h3>Facturas vencidas</h3>
+            <img src="css/imagen/pendientes-aviso.png" class="pendientes-img">
+            <p>Ahora puedes ver cuáles facturas han excedido su fecha de vencimiento para solicitar su cobro</p>
+        </li>
+    </ul>
+
+  <button onclick="window.parent.postMessage('cerrar-aviso', '*')">
+    Entendido
+  </button>
+</body>
+</html>

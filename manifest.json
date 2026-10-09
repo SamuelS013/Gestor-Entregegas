@@ -1,7 +1,8 @@
 {
   "name": "Gestor de Entregas",
   "short_name": "Entregas",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#EF6326",
   "theme_color": "#3367D6",
