@@ -9,6 +9,7 @@
 // ============================================================
 
 import { db, iniciarSesionAnonima } from './firebase.js';
+import { initMetrics } from './metrics.js';
 import {
   collection,
   addDoc,
@@ -33,9 +34,8 @@ const btnGuardar = document.getElementById('btn-guardar-factura');
 const btnAgregarProducto = document.getElementById('btn-agregar-producto');
 const listaProductos = document.getElementById('lista-productos');
 const montoTotalElem = document.getElementById('monto-total');
-const metricBalanceVentas = document.getElementById('metric-balance-ventas');
-const metricDineroDeuda = document.getElementById('metric-dinero-deuda');
-const listaHistorial = document.getElementById('lista-historial');
+const listaHistorialPendientes = document.getElementById('lista-historial-pendientes');
+const listaHistorialFacturasPagadas = document.getElementById('lista-historial-facturas-pagadas');
 const listaHistorialPagadas = document.getElementById('lista-historial-pagadas');
 const fechaVencimientoInput = document.getElementById('fecha-vencimiento');
 
@@ -68,7 +68,7 @@ export async function initFacturas() {
 
   // 2. Registrar eventos y cargar datos
   registrarEventos();
-  cargarHistorialFacturas();
+  await Promise.all([cargarHistorialFacturas(), initMetrics()]);
 }
 
 // ------------------------------------------------------------
@@ -289,7 +289,8 @@ async function manejarSubmitFactura(e) {
 
     modalForm.classList.add('hidden');
     mostrarVistaPrevia(nuevaFactura);
-    cargarHistorialFacturas();
+    await cargarHistorialFacturas();
+    await initMetrics();
 
   } catch (error) {
     console.error('Error detectado:', error);
@@ -345,7 +346,8 @@ async function manejarMarcarPagada() {
     alert(`¡Factura ${facturaActualSeleccionada.idFactura} marcada como PAGADA con éxito!`);
     modalPreview.classList.add('hidden');
     facturaActualSeleccionada = null;
-    cargarHistorialFacturas();
+    await cargarHistorialFacturas();
+    await initMetrics();
 
   } catch (error) {
     console.error('Error al marcar como pagada:', error);
@@ -394,26 +396,24 @@ function estamparMarcaPagado(base64Src) {
 }
 
 // ------------------------------------------------------------
-// Historial + métricas del dashboard
+// Historial de facturas y pagos
 // ------------------------------------------------------------
 async function cargarHistorialFacturas() {
   try {
     const q = query(collection(db, 'facturas'), orderBy('creadoEn', 'desc'));
     const querySnapshot = await getDocs(q);
 
-    listaHistorial.innerHTML = '';
+    listaHistorialPendientes.innerHTML = '';
+    listaHistorialFacturasPagadas.innerHTML = '';
     listaHistorialPagadas.innerHTML = '';
 
-    let totalCobradoVentas = 0;
-    let totalPendienteDeuda = 0;
-    let contadorPendientes = 0;
     let contadorPagadas = 0;
+    let contadorPendientes = 0;
 
     if (querySnapshot.empty) {
-      listaHistorial.innerHTML = '<p class="empty-msg">No hay facturas pendientes registradas.</p>';
+      listaHistorialPendientes.innerHTML = '<p class="empty-msg">No hay facturas pendientes.</p>';
+      listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
       listaHistorialPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
-      metricBalanceVentas.textContent = '$0.00';
-      metricDineroDeuda.textContent = '$0.00';
       return;
     }
 
@@ -422,42 +422,88 @@ async function cargarHistorialFacturas() {
       const idDoc = docSnap.id;
       const facturaObj = { ...data, id: idDoc };
 
-      const item = document.createElement('div');
-      item.className = `history-item ${data.pagada ? 'paid-item' : ''}`;
-      item.innerHTML = `
-        <div class="info">
-          <h4>${data.clienteNombre}</h4>
-          <p>${data.fecha} ${data.hora} | ${data.idFactura}</p>
-        </div>
-        <div class="amount">$${data.montoTotal.toFixed(2)}</div>
-      `;
-
-      item.addEventListener('click', () => {
-        mostrarVistaPrevia(facturaObj);
-      });
-
+      const monto = Number(data.montoTotal) || 0;
+      const vencida = !data.pagada && facturaVencida(data.fechaVencimiento);
       if (data.pagada) {
-        totalCobradoVentas += data.montoTotal || 0;
         contadorPagadas++;
-        listaHistorialPagadas.appendChild(item);
+        listaHistorialFacturasPagadas.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
+        listaHistorialPagadas.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
       } else {
-        totalPendienteDeuda += data.montoTotal || 0;
         contadorPendientes++;
-        listaHistorial.appendChild(item);
+        listaHistorialPendientes.appendChild(crearTarjetaFactura(facturaObj, monto, vencida));
       }
     });
 
     if (contadorPendientes === 0) {
-      listaHistorial.innerHTML = '<p class="empty-msg">No hay facturas pendientes registradas.</p>';
+      listaHistorialPendientes.innerHTML = '<p class="empty-msg">No hay facturas pendientes.</p>';
+    }
+    if (contadorPagadas === 0) {
+      listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
     }
     if (contadorPagadas === 0) {
       listaHistorialPagadas.innerHTML = '<p class="empty-msg">No hay facturas pagadas aún.</p>';
     }
 
-    metricBalanceVentas.textContent = `$${totalCobradoVentas.toFixed(2)}`;
-    metricDineroDeuda.textContent = `$${totalPendienteDeuda.toFixed(2)}`;
-
   } catch (error) {
     console.error('Error al cargar historial:', error);
+    listaHistorialPendientes.innerHTML = '<p class="empty-msg">No se pudieron cargar las facturas pendientes. Intenta recargar la página.</p>';
+    listaHistorialFacturasPagadas.innerHTML = '<p class="empty-msg">No se pudieron cargar las facturas pagadas. Intenta recargar la página.</p>';
+    listaHistorialPagadas.innerHTML = '<p class="empty-msg">No se pudieron cargar los pagos. Intenta recargar la página.</p>';
   }
+}
+
+function crearTarjetaFactura(factura, monto, vencida) {
+  const item = document.createElement('article');
+  item.className = `history-item invoice-card ${factura.pagada ? 'paid-item' : ''}`;
+  item.tabIndex = 0;
+  item.setAttribute('role', 'button');
+  item.setAttribute('aria-label', `Factura ${factura.idFactura}, ${factura.clienteNombre}, $${monto.toFixed(2)}`);
+  item.innerHTML = `
+    <div class="invoice-card-top">
+      <span class="invoice-status ${factura.pagada ? 'status-paid' : 'status-pending'}">${factura.pagada ? 'Pagada' : 'Pendiente'}</span>
+      ${vencida ? '<span class="overdue-indicator" title="Factura vencida" aria-label="Factura vencida">!</span>' : ''}
+    </div>
+    <div class="info">
+      <h4></h4>
+      <p class="invoice-number"></p>
+      <p class="invoice-date"></p>
+    </div>
+    <div class="invoice-card-bottom">
+      <span class="invoice-due"></span>
+      <span class="amount"></span>
+    </div>
+  `;
+  item.querySelector('.info h4').textContent = factura.clienteNombre || 'Cliente sin nombre';
+  item.querySelector('.invoice-number').textContent = factura.idFactura || 'Factura';
+  item.querySelector('.invoice-date').textContent = `${factura.fecha || ''} ${factura.hora || ''}`.trim();
+  item.querySelector('.invoice-due').textContent = factura.pagada
+    ? 'Pago recibido'
+    : factura.fechaVencimiento ? `Vence ${factura.fechaVencimiento}` : 'Sin vencimiento';
+  item.querySelector('.amount').textContent = `$${monto.toFixed(2)}`;
+
+  const abrirFactura = () => mostrarVistaPrevia(factura);
+  item.addEventListener('click', abrirFactura);
+  item.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      abrirFactura();
+    }
+  });
+  return item;
+}
+
+function facturaVencida(fechaVencimiento) {
+  if (!fechaVencimiento) return false;
+  const [dia, mes, anio] = fechaVencimiento.split('/').map(Number);
+  if (!dia || !mes || !anio) return false;
+  const vencimiento = new Date(anio, mes - 1, dia);
+  if (
+    Number.isNaN(vencimiento.getTime())
+    || vencimiento.getDate() !== dia
+    || vencimiento.getMonth() !== mes - 1
+    || vencimiento.getFullYear() !== anio
+  ) return false;
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  return vencimiento <= hoy;
 }

@@ -7,6 +7,9 @@
 
 import { initFacturas } from './factura.js';
 
+// IMPORTACIOND EL AVISO
+import { initAviso } from './aviso.js';
+
 // Referencias del DOM (solo lo que este módulo usa)
 const saludoUsuario = document.getElementById('saludo-usuario');
 const dolar = document.getElementById('dolar');
@@ -83,6 +86,29 @@ document.addEventListener('DOMContentLoaded', () => {
   mostrarFecha();
   actualizarDolar();
 
+  const vistas = ['home', 'facturas', 'pagos'];
+  document.querySelectorAll('.nav-item[data-view]').forEach(boton => {
+    boton.addEventListener('click', () => {
+      const vistaSeleccionada = boton.dataset.view;
+      vistas.forEach(nombreVista => {
+        document.getElementById(`view-${nombreVista}`).classList.toggle(
+          'hidden',
+          nombreVista !== vistaSeleccionada
+        );
+      });
+      document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+        const activa = item === boton;
+        item.classList.toggle('active', activa);
+        if (activa) item.setAttribute('aria-current', 'page');
+        else item.removeAttribute('aria-current');
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
   // Inicializa todo el módulo de facturas
   initFacturas();
+
+  // ICIALIZACION DEL AVISO
+  initAviso();
 });
