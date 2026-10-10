@@ -5,7 +5,7 @@
   "scope": "./",
   "display": "standalone",
   "background_color": "#EF6326",
-  "theme_color": "#3367D6",
+  "theme_color": "#EF6326",
   "icons": [
     {
       "src": "css/imagen/icono-pachos.png",
